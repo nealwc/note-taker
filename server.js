@@ -1,28 +1,23 @@
 const express = require("express");
 const fs = require("fs");
-const path = require("path");
+const uuid = require("uuid");
 
-const db = require("./db/db.json")
+// const db = require("./db/db.json");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname, "./public/index.html"));
-});
+// API routes:
+require("./routes/apiRoutes")(app);
 
-app.get("/notes", function (req, res) {
-    res.sendFile(path.join(__dirname, "./public/notes.html"));
-});
+// html routes:
+require("./routes/htmlRoutes")(app);
 
-app.get("/api/notes", function (req, res) {
-    return res.json(db);
-});
-
+// start server:
 app.listen(PORT, function () {
-    console.log("App listening on PORT " + PORT);
+    console.log("Server listening on: http://localhost:" + PORT);
 });
