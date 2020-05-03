@@ -1,24 +1,35 @@
 const db = require("../db/db.json");
 const fs = require("fs");
-const uuid = require("uuid");
+const uuid = require("uuid").v4;
 
 module.exports = function (app) {
     app.get("/api/notes", function (req, res) {
         return res.json(db);
     });
 
-    // app.post("api/notes", function (req, res) {
-    //     var newNote = req.body;
+    app.post("/api/notes", function (req, res) {
+        let newNote =
+        {
+            id: uuid(),
+            title: req.body.title,
+            text: req.body.text
+        };
 
-    //     saveNote(newNote)
+        fs.readFile("./db/db.json", (err, data) => {
+            if (err) throw err;
+            let notesData = JSON.parse(data);
+            notesData.push(newNote);
 
-    //     db.push(newNote);
+            fs.writeFile("./db/db.json", JSON.stringify(notesData), function (err) {
+                if (err) throw err;
+                return res.json(db);
+            });
+        });
+    });
 
-    //     res.json(newNote);
-    // });
+    app.delete("api/notes:id", function (req, res) {
+        let chosenId = req.params.id;
+        console.log(chosenId);
 
-    // app.delete("api/notes", function (req, res) {
-
-
-    // });
-}
+    });
+};
