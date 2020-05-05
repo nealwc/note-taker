@@ -16,4 +16,4 @@ Node is required to run the application. To install the app run the following in
 
 ## Contributing/Questions
 
-[Carter Neal](http://github.com/nealwc)
+- Carter Neal ([@nealwc](http://github.com/nealwc))
