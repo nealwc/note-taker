@@ -5,7 +5,11 @@ const uuid = require("uuid").v4;
 module.exports = function (app) {
     // function to retrieve the note data from the db.json file
     app.get("/api/notes", function (req, res) {
-        return res.json(db);
+        fs.readFile("./db/db.json", (err, data) => {
+            if (err) throw err;
+            let notesArr = JSON.parse(data);
+            res.json(notesArr);
+        });
     });
 
     // function to post new note data to the db.json file
@@ -20,13 +24,13 @@ module.exports = function (app) {
         // retrieves the data from the db.json, parses the data and adds the new note
         fs.readFile("./db/db.json", (err, data) => {
             if (err) throw err;
-            let notesData = JSON.parse(data);
-            notesData.push(newNote);
+            let notesArr = JSON.parse(data);
+            notesArr.push(newNote);
 
             // turns the new notes data into strings for JSON and writes it to the db.json file
-            fs.writeFile("./db/db.json", JSON.stringify(notesData), function (err) {
+            fs.writeFile("./db/db.json", JSON.stringify(notesArr), function (err) {
                 if (err) throw err;
-                return res.json(db);
+                res.json(db);
             });
         });
     });
