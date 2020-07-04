@@ -31,10 +31,20 @@ module.exports = function (app) {
         });
     });
 
-    // funciton to delete a note from the db.json file
-    app.delete("api/notes:id", function (req, res) {
+    // function to delete a note from the db.json file
+    app.delete("/api/notes/:id", function (req, res) {
         let chosenId = req.params.id;
         console.log(chosenId);
 
+        fs.readFile("./db/db.json", (err, data) => {
+            if (err) throw err;
+            let notesArr = JSON.parse(data);
+            let newNotesArr = notesArr.filter(note => note.id != chosenId);
+
+            fs.writeFile("./db/db.json", JSON.stringify(newNotesArr), function (err) {
+                if (err) throw err;
+                res.json(db);
+            });
+        });
     });
 };
